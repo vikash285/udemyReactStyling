@@ -9,10 +9,10 @@ const AddUser = (props) => {
   const [enteredUsername, setEnteredUsername] = useState("");
   const [enteredAge, setEnteredAge] = useState("");
   const [error, setError] = useState();
+  const [enteredCollege, setEnteredCollege] = useState("");
 
   const addUserHandler = (event) => {
     event.preventDefault();
-    console.log(enteredUsername, enteredAge);
     if (enteredUsername.trim().length === 0 || enteredAge.trim().length === 0) {
       setError({
         title: "Invalid input",
@@ -27,9 +27,10 @@ const AddUser = (props) => {
       });
       return;
     }
-    props.onAddUser(enteredUsername, enteredAge);
+    props.onAddUser(enteredUsername, enteredAge, enteredCollege);
     setEnteredUsername("");
     setEnteredAge("");
+    setEnteredCollege("");
   };
 
   const usernameChangeHandler = (event) => {
@@ -42,6 +43,10 @@ const AddUser = (props) => {
 
   const errorHandler = () => {
     setError(null);
+  };
+
+  const collegeHandler = (event) => {
+    setEnteredCollege(event.target.value);
   };
 
   return (
@@ -68,6 +73,13 @@ const AddUser = (props) => {
             id="age"
             value={enteredAge}
             onChange={ageChangeHandler}
+          />
+          <label htmlFor="college">College</label>
+          <input
+            type="text"
+            id="college"
+            value={enteredCollege}
+            onChange={collegeHandler}
           />
           <Button type="submit">Add User</Button>
         </form>
