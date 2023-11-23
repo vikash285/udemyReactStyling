@@ -17,7 +17,7 @@ const passwordReducer = (state, action) => {
   if (action.type === "PASSWORD") {
     return { value: action.val, isValid: action.val.trim().length > 6 };
   }
-  if (action.type === "PASSOWRD-BLUR") {
+  if (action.type === "PASSWORD-BLUR") {
     return { value: state.value, isValid: state.value.trim().length > 6 };
   }
   return { value: "", isValid: false };
@@ -34,12 +34,12 @@ const Login = (props) => {
 
   const [emailState, dispatchEmail] = useReducer(emailReducer, {
     value: "",
-    isValid: false,
+    isValid: null,
   });
 
   const [passwordState, dispatchPassword] = useReducer(passwordReducer, {
     value: "",
-    isValid: false,
+    isValid: null,
   });
 
   useEffect(() => {
@@ -50,40 +50,41 @@ const Login = (props) => {
     };
   }, []);
 
-  // useEffect(() => {
-  //   const identifier = setTimeout(() => {
-  //     console.log("Checking form validity!");
-  //     setFormIsValid(
-  //       enteredPassword.trim().length > 6 &&
-  //         enteredEmail.includes("@") &&
-  //         enteredCollege.trim().length > 0
-  //     );
-  //   }, 500);
+  const { isValid: emailIsValid } = emailState;
+  const { isValid: passwordIsValid } = passwordState;
 
-  //   return () => {
-  //     console.log("Cleanup");
-  //     clearTimeout(identifier);
-  //   };
-  // }, [enteredEmail, enteredPassword, enteredCollege]);
+  useEffect(() => {
+    const identifier = setTimeout(() => {
+      console.log("Checking form validity!");
+      setFormIsValid(
+        emailIsValid && passwordIsValid && enteredCollege.trim().length > 0
+      );
+    }, 500);
+
+    return () => {
+      console.log("Cleanup");
+      clearTimeout(identifier);
+    };
+  }, [emailIsValid, passwordIsValid, enteredCollege]);
 
   const emailChangeHandler = (event) => {
     dispatchEmail({ type: "USER-INPUT", val: event.target.value });
 
-    setFormIsValid(
-      passwordState.isValid &&
-        event.target.value.includes("@") &&
-        enteredCollege.trim().length > 0
-    );
+    // setFormIsValid(
+    //   passwordState.isValid &&
+    //     event.target.value.includes("@") &&
+    //     enteredCollege.trim().length > 0
+    // );
   };
 
   const passwordChangeHandler = (event) => {
     dispatchPassword({ type: "PASSWORD", val: event.target.value });
 
-    setFormIsValid(
-      event.target.value.trim().length > 6 &&
-        emailState.isValid &&
-        enteredCollege.trim().length > 0
-    );
+    // setFormIsValid(
+    //   event.target.value.trim().length > 6 &&
+    //     emailState.isValid &&
+    //     enteredCollege.trim().length > 0
+    // );
   };
 
   const collegeChangeHandler = (event) => {
