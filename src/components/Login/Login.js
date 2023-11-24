@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useReducer, useContext } from "react";
+import React, {
+  useState,
+  useEffect,
+  useReducer,
+  useContext,
+  useRef,
+} from "react";
 import Card from "../UI/Card/Card";
 import classes from "./Login.module.css";
 import Button from "../UI/Button/Button";
@@ -45,6 +51,9 @@ const Login = (props) => {
   });
 
   const authCtx = useContext(AuthContext);
+  const emailInputRef = useRef();
+  const passwordInputRef = useRef();
+  const collegeInputRef = useRef();
 
   useEffect(() => {
     console.log("EFFECT-RUNNING");
@@ -115,13 +124,22 @@ const Login = (props) => {
 
   const submitHandler = (event) => {
     event.preventDefault();
-    authCtx.onLogin(emailState.value, passwordState.value, enteredCollege);
+    if (formIsValid) {
+      authCtx.onLogin(emailState.value, passwordState.value, enteredCollege);
+    } else if (!emailIsValid) {
+      emailInputRef.current.focus();
+    } else if (!formIsValid) {
+      passwordInputRef.current.focus();
+    } else {
+      collegeInputRef.current.focus();
+    }
   };
 
   return (
     <Card className={classes.login}>
       <form onSubmit={submitHandler}>
         <Input
+          ref={emailInputRef}
           type="email"
           label="E-mail"
           id="email"
@@ -131,6 +149,7 @@ const Login = (props) => {
           onBlur={validateEmailHandler}
         />
         <Input
+          ref={passwordInputRef}
           type="password"
           label="Password"
           id="password"
@@ -140,6 +159,7 @@ const Login = (props) => {
           onBlur={validatePasswordHandler}
         />
         <Input
+          ref={collegeInputRef}
           type="college"
           label="College"
           id="college"
@@ -149,7 +169,7 @@ const Login = (props) => {
           onBlur={validateCollegeHandler}
         />
         <div className={classes.actions}>
-          <Button type="submit" className={classes.btn} disabled={!formIsValid}>
+          <Button type="submit" className={classes.btn}>
             Login
           </Button>
         </div>
